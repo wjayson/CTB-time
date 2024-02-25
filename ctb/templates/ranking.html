@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>排行榜</title>
+    <style> 
+    <!-- 以下代码为网站布局模版，参考https://www.w3schools.cn/css/css3_flexbox_responsive.html -->
+        *{
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: MicrosoftYahei;
+            margin: 0
+        }
+        .center {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+            font-family: STXingkai
+        }   
+        .center2 {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+            vertical-align: middle;
+        }   
+        .header {
+            padding: 60px;
+            text-align: center;
+            background: #135cbd;
+            color: white;
+        }
+        
+        .navbar {
+            display: flex;
+            background-color: rgb(71, 69, 69);
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: rgb(179, 175, 175);
+        }
+        
+        .row {  
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .side {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }   
+
+        .main {
+            flex: 70%;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: #ddd;
+            text-align: center;
+        }
+
+
+        @media screen and (max-width: 700px) {
+  .row, .navbar {   
+    flex-direction: column;
+  }
+}
+    </style>
+</head>
+
+
+<body>
+
+    <div class = "header">
+        <h1> 欢迎来到排行榜！</h1>
+        <p> 人生的智慧在于<b>掌控</b>你的时间。
+            在四象限中每完成一个任务获得200分
+        </p>
+    </div>
+    <div class = "navbar">
+        <a href='{{ url_for('grid')}}'>四象限</a>
+        <a href='{{ url_for('timer')}}'>番茄钟</a>
+        <a href='{{ url_for('todo')}}'>随机池子</a>
+        <a href='{{ url_for('ranking')}}'>排行榜</a>
+        <a href='{{ url_for('logout')}}'>登出</a>
+    </div>
+    <div class = center id="sentence1">勤学的人，总是感到时间过得太快；懒惰的人，却总是埋怨时间跑得太慢。——新格言</div>
+    <script>
+        var No=0
+        var sentence = ["Have you ever seen the scene of Los Angeles at 4am? I see often, because I have been starting training at that time. —Kobe Bryant--来自同学Jayson Zhu","逝者如斯夫，不舍昼夜（手动狗头）——《论语》--来自同学逝者如斯夫，不舍昼夜（手动狗头）","The bad news is time flies. The good news is you're the pilot. - Michael Altshuler--来自匿名同学","人要忠于年轻时的梦想，就是忠于自己的本性。-弗里德里希•席勒--来自TLS000","节省时间；也就是使一个人的有限生命，更加有效而也即等于延长了人的生命。——鲁迅","把时间用在思考上是最能节省时间的事情。——卡曾斯","好事总是需要时间，不付出大量的心血和劳动是做不成大事的。想吃核桃，就是得首先咬开坚硬的果壳。——格里美尔斯豪森","时间是人能消费的最有价值的东西。——狄奥佛拉斯塔","时间是衡量事业的标准。——培根","胆怯之心随着时间的消失而消失。——埃斯库罗斯","我想正是伸手摘星的精神，让我们很多人长时间地工作奋战。不论到哪，让作品充分表现这个精神，并且驱使我们放弃佳作，只求杰作。——李奥贝纳","较高级复杂的劳动，是这样一种劳动力的表现，这种劳动力比较普通的劳动力需要较高的教育费用，它的生产需要花费较多的劳动时间。因此，具有较高的价值。——马克思","时间应分配得精密，使每年、每月、每天和每小时都有它的特殊任务。——夸美纽斯"]
+        setInterval(startSentence,50000)
+            
+        function startSentence(){
+            if (No == 10){
+                No = 0
+                document.getElementById('sentence1').innerText = sentence[No]
+            }else{
+                document.getElementById('sentence1').innerText = sentence[No]
+                No = No + 1
+            }
+        }
+    </script>
+</body>
+<div class = center2>
+    <h1>
+        今日实时排行榜
+    </h1>
+</div>
+<div class = center2>
+    <p>
+        {% for i in range(user_number) %}
+            {% for user in ranking_list %}
+                {% if i == user["rank"] %}
+                <br>用户名：{{ user["user"]}} 排名： {{user["rank"]}} 分数: {{user["score"]}}
+                {% endif %}
+            {% endfor %}
+        {% endfor %}
+
+    </p>
+</div>
+<div class="center2"
+    <div class="footer">
+        {% for user in ranking_list %}
+            {% if name == user["user"] %}
+                <br>&emsp;我的昵称：{{name}}
+                <br>&ensp;我的排名：{{user["rank"]}}
+                <br>&emsp;&emsp;&ensp;我的分数：{{user["score"]}}
+            {% endif %}
+        {% endfor %}
+    </div>
+</div>
+

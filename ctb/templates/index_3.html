@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄钟</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: MicrosoftYahei;
+            margin: 0
+        }
+
+        .header {
+            padding: 60px;
+            text-align: center;
+            background: #135cbd;
+            color: white;
+        }
+        
+        .navbar {
+            display: flex;
+            background-color: rgb(71, 69, 69);
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: rgb(179, 175, 175);
+        }
+        
+        .row {  
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .side {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }   
+
+        .center {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+            font-family: STXingkai;
+        }
+        .center1 {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+
+        }   
+
+        .button{
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center  
+        }
+
+        .main {
+            flex: 70%;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: #ddd;
+        }
+
+
+        @media screen and (max-width: 700px) {
+  .row, .navbar {   
+    flex-direction: column;
+  }
+}
+    </style>
+</head>
+<body>
+    <div class = "header">
+        <h1>欢迎使用番茄钟！</h1>
+        <p> 人生的智慧在于<b>掌控</b>你的时间。</p>
+    </div>
+
+    <div class = "navbar">
+        <a href='{{ url_for('grid')}}'>四象限</a>
+        <a href='{{ url_for('timer')}}'>番茄钟</a>
+        <a href='{{ url_for('todo')}}'>随机池子</a>
+        <a href='{{ url_for('ranking')}}'>排行榜</a>
+        <a href='{{ url_for('logout')}}'>登出</a>
+    </div>
+    
+    <div class = center1 id="status">番茄钟</div>
+    <div class = center1 id="timer">25:00</div>
+    <div class = center id="sentence1">只有经过长时间完成其发展的艰苦工作，并长期埋头沉没于其中的任务，方可有所成就。—黑格尔</div>
+    <div class = "button">
+        <button id="start" onclick="startTomato()">开始番茄工作</button>
+        <button id="pauseTimer" onclick="pauseTimer()">暂停</button>
+        <button id="stop" onclick="stopTimer()"></button>
+        <button onclick="time30()">25分钟</button>
+        <button onclick="time60()">50分钟</button>
+        <button onclick="time90()">75分钟</button>
+    </div>
+    <script>
+        var timer;
+        var minutes = 25;
+        var seconds = 0;
+        var status = 0;
+        var pause = 0;
+        var stat = 0;
+        var No = 0
+        var Time = 25
+        var sentence = ["“只要我们能善用时间，就永远不愁时间不够用”——歌德——来自同学TT","我习古华久，深秘我已悉。古华枪剑长浮锈，今日溶洗与尔知。古华之剑华，若雨若飘华。飘华人可撷，雨线人难画。古华之枪华，灼灼兮灯华。灯华易脆散，复聚如燃霞。如燃霞，三尺光，何辉煌。人谓使剑如使指，我言剑光是目光。游离物外无重量，裁雨者雨，刺明者明。动如龙蛇捉不住，青眼为剑，侧目为枪。——来自同学快子","“ 任何进步都是在有意识状态下进行的，任何退步都是在无意识状态下进行的”——尼采——来自同学TT","你可以拖延，但时间不会。——来自匿名同学","生于夏花之绚烂，死于秋叶之静美——来自匿名同学","只争朝夕——来自匿名同学","合理安排时间，就等于节约时间。 ——培根","盛年不重来，一日难再晨。及时宜自勉，岁月不待人。 ——陶渊明","你热爱生命吗？那么别浪费时间，因为时间是构成生命的材料。 ——富兰克林","荒废时间等于荒废生命。——川端康成","时间就像海绵里的水只要愿挤 总还是有的。 ——鲁迅","把活着的每一天看作生命的最后一天。 ——海伦·凯勒","在所有的批评家中，最伟大、最正确、最天才的是时间。 ——别林斯基","你热爱生命吗？那么别浪费时间，因为时间是组成生命的材料。 ——富兰克林","把活着的每一天看作生命的最后一天。 ——海伦·凯勒","迁延蹉跎，来日无多，二十丽姝，请来吻我，衰草枯杨，青春易过。 ——莎士比亚",]
+
+        setInterval(startSentence,50000)
+        setInterval(checkTimer,50)
+
+
+        function time30(){
+            Time = 25
+        }
+
+        function time60(){
+            Time = 50
+        }
+
+        function time90(){
+            Time = 75
+        }
+        
+        function startSentence(){
+            if (No == 10){
+                No = 0
+                document.getElementById('sentence1').innerText = sentence[No]
+            }else{
+                document.getElementById('sentence1').innerText = sentence[No]
+                No = No + 1
+            }
+        }
+
+        function checkTimer(){
+            if (status == 0 || status == 1){
+                stat = 1
+            }
+            else{
+                stat = 0
+            }
+        }
+
+        function startTimer() {  
+            timer = setInterval(countdown, 1000);
+            document.getElementById('start').innerText = ''
+            document.getElementById('stop').innerText = '停止番茄工作'
+            stat = 1
+            pause = 0
+            document.getElementById('pauseTimer').innerText = '暂停'
+            
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+            document.getElementById('stop').innerText = ''
+            document.getElementById('start').innerText = '开始番茄工作'
+            status = -1
+            resetTimer();
+            document.getElementById('status').innerText = '番茄钟已停止'
+            
+        }
+
+        function countdown() {
+            if (minutes == 0 && seconds == 0 && status == 0) {
+                startBreak();
+            }
+            if (status == 0){
+                document.getElementById('status').innerText = '工作时间';
+            }
+            if (status == 1) {
+                document.getElementById('status').innerText = '休息时间';
+            }
+            if (minutes == 0 && seconds == 0 && status == 1) {
+                startTomato();
+            }
+            if (seconds == 0) {
+                minutes--;
+                seconds = 59;
+            } 
+            else
+            {
+                seconds--;
+            }
+                document.getElementById('timer').innerText =
+                    (minutes < 10 ? '0' : '') + minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+        }
+            
+        
+
+        function startTomato() { 
+        <!-- 番茄工作开始 -->
+            resetTimer();
+            minutes = Time;
+            status = 0
+            startTimer();
+            
+        }
+  
+
+
+        function startBreak() {
+            resetTimer();
+            minutes = Time/5;
+            status = 1;
+            startTimer();
+            
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            minutes = 0;
+            seconds = 0;
+            document.getElementById('timer').innerText = '00:00';
+            
+        }
+
+
+        function pauseTimer(){
+            if (stat==1){
+                if (pause == 0){
+                    document.getElementById('pauseTimer').innerText = '继续'
+                    document.getElementById('status').innerText = '番茄钟已暂停'
+                    clearInterval(timer)
+                    pause = 1
+                }else{
+                    document.getElementById('pauseTimer').innerHTML = '暂停'
+                    startTimer()
+                    pause = 0
+                }
+            }
+
+        }
+
+    </script>
+</body>
+</html>

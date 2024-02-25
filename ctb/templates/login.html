@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>番茄钟</title>
+    <style>
+        *{
+            box-sizing: border-box;
+        }
+
+        body{
+            font-family: MicrosoftYahei;
+            margin: 0
+        }
+
+        .header {
+            padding: 60px;
+            text-align: center;
+            background: #135cbd;
+            color: white;
+        }
+        
+        .navbar {
+            display: flex;
+            background-color: rgb(71, 69, 69);
+        }
+
+        .navbar a {
+            color: white;
+            padding: 14px 20px;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: rgb(179, 175, 175);
+        }
+        
+        .row {  
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .side {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+        }   
+
+        .center {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+            font-family: STXingkai;
+        }   
+
+        .center1 {
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center;
+            vertical-align: middle;
+            margin: 0;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            
+        }   
+
+        .button{
+            flex: 30%;
+            background-color: #f1f1f1;
+            padding: 20px;
+            text-align: center  
+        }
+
+        .main {
+            flex: 70%;
+            background-color: white;
+            padding: 20px;
+        }
+
+        .footer {
+            padding: 20px;
+            text-align: center;
+            background: #ddd;
+        }
+
+        .wrap {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+         
+        }
+        @media screen and (max-width: 700px) {
+  .row, .navbar {   
+    flex-direction: column;
+  }
+}
+    </style>
+</head>
+
+<div class = center1>
+  {% macro render_field(field) %} <!-- 定义字段宏 -->
+    <dt>{{ field.label }}:
+    <dd>{{ field(**kwargs)|safe }}
+    {% if field.errors %}
+      <ul class=errors>
+      {% for error in field.errors %}
+        <li>{{ error }}</li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+    </dd>
+  {% endmacro %}
+
+  <!-- 登录表单 -->
+  <form method="POST">
+
+    {{ form.csrf_token }}
+    {{ render_field(form.username) }}
+    {{ render_field(form.password) }}
+    {% if emsg %}  <!-- 如果有错误信息 则显示 -->
+        <h3> {{ emsg }}</h3>
+    {% endif %}
+    <input type="submit" value="登录">
+ 
+  </form>
+
+  <a href='{{ url_for('register')}}'>尚未拥有账号？注册一个账号</a>
+</div>
